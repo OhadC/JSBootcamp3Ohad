@@ -21,18 +21,16 @@ function is(obj, option) {
 function set(obj, option) {
     const optionValue = bitwiseOptions[option]
     return obj | optionValue
+
+    // option to set and unset:
+    // return obj ^ optionValue
 }
 
 var pita = 1;
 
 buildOptions();
-bitwiseOptions
 let answer = is(pita, 'hummus')
-answer
 answer = is(pita, 'salat')
-answer
 
 pita = set(pita, 'hummus')
-pita
 pita = set(pita, 'chips')
-pita
