@@ -6,7 +6,7 @@ const rl = readline.createInterface({
 });
 
 
-function blackJack() {
+function BlackJack() {
     this.startGame = () => {
         this.sum = 0
         this.pickCard()
@@ -23,9 +23,11 @@ function blackJack() {
 
                 if (this.sum === 21) {
                     console.log('You won!!')
+                    rl.close();
                     return
                 } else if (this.sum > 21) {
                     console.log('You lose!')
+                    rl.close();
                     return
                 }
 
@@ -33,6 +35,7 @@ function blackJack() {
 
             } else if (answer[0].toLowerCase() === 'n') {
                 console.log('your final score is', this.sum)
+                rl.close();
                 return
             } else {
                 this.askForAnotherCard()
@@ -45,8 +48,8 @@ function blackJack() {
     this.pickCard = () => {
         let currentRand = this.getRandomNumber(13) + 1;
         this.sum += currentRand
-        console.log(currentRand, 'your corrent score is ', this.sum)
+        console.log('youve got', currentRand, '\nyour score is', this.sum)
     }
 }
 
-(new blackJack).startGame()
+(new BlackJack).startGame()
