@@ -1,19 +1,32 @@
-class BunaryTree {
+class BinaryTree {
     constructor() {
         this.head = null
     }
 
     add(data) {
+        const nodeToAdd = new Node(data)
+        if (!this.head) {
+            this.head = nodeToAdd
+            return
+        }
         let currNode = this.head
-        const nodeToAdd = data
-        while (!(currNode)) {
-            if (currNode.data <= data) {
-                currNode = currNode.left
+        while (true) {
+            if (data <= currNode.data) {
+                if(currNode.right){
+                    currNode = currNode.right
+                } else{
+                    currNode.right = nodeToAdd
+                    return
+                }
             } else {
-                currNode = currNode.right
+                if(currNode.left){
+                    currNode = currNode.left
+                } else{
+                    currNode.left = nodeToAdd
+                    return
+                }
             }
         }
-        currNode = nodeToAdd
     }
     search(data) {
         let currNode = this.head
@@ -37,3 +50,15 @@ class Node {
         this.left = null
     }
 }
+
+const binaryTree = new BinaryTree()
+binaryTree.add(2)
+binaryTree.add(1)
+binaryTree.add(3)
+binaryTree.add(4)
+binaryTree.add(1.5)
+binaryTree.add(1)
+
+binaryTree
+
+console.log(binaryTree.search(3))
