@@ -1,0 +1,85 @@
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    margin:0;
+    padding:0;
+    height:100%;
+    font-family: sans-serif;
+}
+
+button {
+    padding: 0.3em 1.2em;
+    margin: 0.3em;
+    border: none;
+    border-radius: 1rem;
+    transition: all 0.2s;
+}
+
+#gameWrapper {
+    height: auto;
+    min-height: 100%;
+    display: flex;
+    flex-flow: column;
+}
+
+#player-cards, #next-move-options, #score-board {
+    width: 100%;
+    padding: 2em 0;
+}
+
+.container {
+    height: 100%;
+    max-width: 1200px;
+    margin: auto;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+}
+
+#player-cards {
+    background: radial-gradient(circle, #00a040,#005F26);
+    color: white;
+}
+
+#player-cards #player-sum {
+    text-align: center;
+    font-size: 2em;
+    margin-bottom: 1rem;
+}
+
+#player-cards img {
+    height: 16em;
+}
+
+#next-move-options {
+    background: white;
+    color: #0B0B07;
+}
+
+#next-move-options button {
+    background: #EEC147;
+    color: #0B0B07;
+    font-size: 2em
+}
+
+#next-move-options button:disabled {
+    background: gray;
+    color: white;
+}
+
+#score-board {
+    background: #0B0B07;
+    color: white;
+    flex-grow: 1;
+}
+
+#score-board .player-data {
+    background: white;
+    color: #0B0B07;
+    font-size: 2em;
+    padding: 0.3em 1.2em;
+    margin: 0.3em;
+    border-radius: 1rem;
+}
