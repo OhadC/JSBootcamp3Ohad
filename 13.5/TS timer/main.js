@@ -1,19 +1,22 @@
 var Timer = /** @class */ (function () {
     function Timer(interval) {
         this.interval = interval;
-        this.onTime = [];
+        this.callbacks = [];
     }
-    Timer.prototype.tick = function (onTick) {
-        this.onTime.push(onTick);
+    Timer.prototype.tick = function (callback) {
+        this.callbacks.push(callback);
     };
     Timer.prototype.start = function () {
         var _this = this;
         this.intervalID = setInterval(function () {
-            _this.onTime.forEach(function (func) { return func(); });
+            _this.callbacks.forEach(function (callback) { return callback(); });
         }, this.interval);
     };
     Timer.prototype.stop = function () {
-        clearInterval(this.intervalID);
+        if (this.intervalID) {
+            clearInterval(this.intervalID);
+            this.intervalID = undefined;
+        }
     };
     return Timer;
 }());

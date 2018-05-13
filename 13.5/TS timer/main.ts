@@ -1,21 +1,24 @@
 class Timer {
-    private onTime = []
+    private callbacks = []
     private intervalID;
 
     constructor(private interval) { }
 
-    tick(onTick) {
-        this.onTime.push(onTick)
+    tick(callback) {
+        this.callbacks.push(callback)
     }
 
     start() {
         this.intervalID = setInterval(() => {
-            this.onTime.forEach(func => func())
+            this.callbacks.forEach(callback => callback())
         }, this.interval)
     }
 
     stop() {
-        clearInterval(this.intervalID)
+        if (this.intervalID) {
+            clearInterval(this.intervalID)
+            this.intervalID = undefined
+        }
     }
 }
 
