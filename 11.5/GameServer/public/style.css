@@ -83,3 +83,15 @@ button {
     margin: 0.3em;
     border-radius: 1rem;
 }
+
+#score-board .player-data.dead {
+    background-color: lightcoral;
+}
+
+#score-board .player-data.staying {
+    background-color: #fcf39f;
+}
+
+#score-board .player-data.winner {
+    background-color: lightgreen;
+}

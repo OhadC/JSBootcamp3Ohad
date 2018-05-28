@@ -3,14 +3,15 @@ $(function () {
 
     const state = {
         roomId: 'room1',
-        nextPlayerIndex: -1,
-        players: []
+        currPlayerIndex: -1,
+        players: [],
+        playingPlayers: []
     }
 
     const $drawButton = $('button#draw')
     $drawButton.on('click', e => draw())
     const $stayButton = $('button#stay')
-    $stayButton.on('click', e => updateNextPlayerIndex())   // TODO: stay on each player
+    $stayButton.on('click', e => stay())
 
     const $userCardsDiv = $('div#user-cards .container')
     const $scoreBoardDiv = $('div#score-board .container')
@@ -36,43 +37,63 @@ $(function () {
             return `https://deckofcardsapi.com/static/img/${card}.png`
         }
     }
-    function updateNextPlayerIndex() {
-        let nextPlayerIndex = state.nextPlayerIndex + 1
-        while (nextPlayerIndex <= state.players.length + state.nextPlayerIndex) {
-            const nextPlayer = state.players[nextPlayerIndex % state.players.length]
-            if (nextPlayer.isAlive && nextPlayer.score < nextPlayer.maxScore) {
-                disableButtons(false)
-                state.nextPlayerIndex = nextPlayerIndex % state.players.length
-                return
-            }
-            nextPlayerIndex++
+    function updateCurrPlayerIndex() {
+        console.log(state.playingPlayers)
+        if (state.playingPlayers.length === 0) {
+            finishGame()
+        } else {
+            disableButtons(false)
+            state.currPlayerIndex = (state.currPlayerIndex + 1) % state.playingPlayers.length
+            updateUserCards()
         }
-        finishGame()
     }
     function updatePlayerScore(player, scoreToAdd) {
         player.score += scoreToAdd
-        if (player.score > player.maxScore) {
-            player.isAlive = false
-        }
         player.div.children().get(1).remove()
         $('<p>').text('Score: ' + player.score).appendTo(player.div)
     }
     function draw() {
-        const currPlayer = state.players[state.nextPlayerIndex]
+        const currPlayer = state.playingPlayers[state.currPlayerIndex]
         const url = `${serverUrl}/room/${state.roomId}/players/${currPlayer.name}/draw`
         return $.ajax({
             type: "GET",
             url: url,
         }).done(data => {
             updatePlayerScore(currPlayer, data.score)
-            updateNextPlayerIndex()
-            updateUserCards()
+            if (currPlayer.score >= 21) {
+                currPlayer.div.addClass('dead')
+                state.playingPlayers.splice(state.currPlayerIndex, 1)
+                state.currPlayerIndex--
+            }
+            updateCurrPlayerIndex()
         })
     }
+    function stay() {
+        const currPlayer = state.playingPlayers[state.currPlayerIndex]
+        currPlayer.div.addClass('staying')
+        state.playingPlayers.splice(state.currPlayerIndex, 1)
+        state.currPlayerIndex--
+        updateCurrPlayerIndex()
+    }
     function finishGame() {
-        // TODO: this
-        console.log('done!')
         disableButtons(true)
+
+        let max = 0
+        let winners = []
+        state.players.forEach(player => {
+            if (player.isAlive) {
+                if (player.score === max) {
+                    winners.push(player)
+                } else if (player.score > max) {
+                    max = player.score
+                    winners = [player]
+                }
+            }
+        })
+        winners.forEach(player => {
+            player.div.removeClass('staying')
+            player.div.addClass('winner')
+        })
     }
     function addPlayer(player) {
         state.players.push(player)
@@ -81,6 +102,12 @@ $(function () {
         $('<p>').text('Score: ' + player.score).appendTo($div)
         $div.appendTo($scoreBoardDiv)
         player.div = $div
+
+        if (!player.isAlive) {
+            player.div.addClass('dead')
+        } else if (player.score < 21) {
+            state.playingPlayers.push(player)
+        }
     }
     function fetchData() {
         const url = `${serverUrl}/room/${state.roomId}`
@@ -91,7 +118,7 @@ $(function () {
             console.log(data)
             if (data.players) {
                 data.players.forEach(addPlayer)
-                updateNextPlayerIndex()
+                updateCurrPlayerIndex()
             }
         })
     }
