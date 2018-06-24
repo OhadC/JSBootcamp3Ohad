@@ -1,0 +1,15 @@
+@function color-tones($base-color) {
+    $tones-list: ();
+    @for $i from 3 through 1 {
+        $tones-list: append($tones-list, darken($base-color, 10% * $i));
+    }
+    $tones-list: append($tones-list, $base-color);
+    @for $i from 1 through 3 {
+        $tones-list: append($tones-list, lighten($base-color, 10% * $i));
+    }
+    @return $tones-list
+}
+
+@function get-tone($color-map, $tone) {
+    @return nth($brand-blue, $tone + 4)
+}

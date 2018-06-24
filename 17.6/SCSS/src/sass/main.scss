@@ -1,0 +1,6 @@
+@import "mixins.scss";
+@import "variables.scss";
+
+div {
+    color: get-tone($brand-blue, 0)
+}

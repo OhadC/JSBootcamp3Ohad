@@ -1,0 +1,20 @@
+{
+  "name": "SCSS",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "concurrently \"npm run watch-sass\" \"npm run http-server\"",
+    "http-server": "http-server dist",
+    "watch-sass": "sass --watch src/sass/main.scss dist/stylesheets/main.css",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "concurrently": "^3.5.1",
+    "http-server": "^0.11.1",
+    "sass": "^1.6.1"
+  }
+}
