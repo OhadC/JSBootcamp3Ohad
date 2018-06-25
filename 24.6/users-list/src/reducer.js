@@ -1,23 +1,52 @@
 export const initialState = {
-    users: [
-        { name: "Ori", id: 0 },
-        { name: "Roni", id: 1 },
-    ],
+    isLoading: true,
+    users: [],
     nextId: 2
 }
 
+const setUsers = (state, action) => ({
+    ...state,
+    users: action.payload.users
+})
+
+const addUserStart = (state, action) => {
+    const { name, pendingId } = action.payload
+    const user = { name, pendingId }
+    const users = state.users.concat(user)
+    return {
+        ...state,
+        users
+    }
+}
+
+const addUserSuccess = (state, action) => {
+    const { pendingId, id } = action.payload
+    const users = state.users.concat([])
+    const userIndex = users.findIndex(user => user.pendingId && user.pendingId === pendingId)
+    const user = {
+        ...users[userIndex],
+        pendingId: undefined,
+        id
+    }
+    users[userIndex] = user
+    return {
+        ...state,
+        users
+    }
+}
+
+const setLoading = (state, isLoading) => ({
+    ...state,
+    isLoading
+})
+
 export const reducer = (state = initialState, action) => {
     switch (action.type) {
-        case ("ADD_USER"):
-            const newUser = {
-                name: action.payload.name,
-                id: state.nextId
-            }
-            return {
-                ...state,
-                users: state.users.concat(newUser),
-                nextId: state.nextId + 1
-            }
+        case ("SET_USERS"): return setUsers(state, action)
+        case ("ADD_USER_START"): return addUserStart(state, action)
+        case ("ADD_USER_SUCCESS"): return addUserSuccess(state, action)
+        case ("START_LOADING"): return setLoading(state, true)
+        case ("STOP_LOADING"): return setLoading(state, false)
         default: return state
     }
 }

@@ -4,7 +4,11 @@ import './index.css'
 import App from './App'
 import registerServiceWorker from './registerServiceWorker'
 import { Provider } from 'react-redux'
-import { store } from './store';
+
+import { store } from './store'
+import { fetchUsers } from './actions'
+
+store.dispatch(fetchUsers())
 
 ReactDOM.render(
     <Provider store={store}>

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import './App.css'
-import { addUser } from './actions'
+import { addUser, startLoading, stopLoading } from './actions'
 
 class App extends Component {
     constructor(props) {
@@ -17,23 +17,29 @@ class App extends Component {
 
     render() {
         const users = this.props.users.map(user => (
-            <p key={user.id}>
-                {user.name}
-            </p>
+            <li key={'id' in user ? user.id : user.pendingId }>
+                <span>{user.name}</span>
+                {user.pendingId ? <span>Saving...</span> : null}
+            </li>
         ))
 
         return (
-            <div className="App">
-                <input type="text" ref={this.nameInputRef} />
-                <button onClick={this.onAddUser}>Add User</button>
-                {users}
-            </div>
+            this.props.isLoading ? (<p>Loading...</p>) :
+                (<div className="App">
+
+                    <input type="text" ref={this.nameInputRef} />
+                    <button onClick={this.onAddUser}>Add User</button>
+                    <ul>
+                        {users}
+                    </ul>
+                </div>)
         )
     }
 }
 
 const mapStateToProps = (state) => ({
-    users: state.users
+    users: state.users,
+    isLoading: state.isLoading
 })
 
-export default connect(mapStateToProps, {addUser})(App);
+export default connect(mapStateToProps, { addUser, startLoading, stopLoading })(App);
